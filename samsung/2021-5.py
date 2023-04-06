@@ -10,88 +10,77 @@ from collections import deque
 #총 점수 구하기
 n, m  = map(int,input().split())
 grid = list(list(map(int,input().split())) for _ in range(n))
-#0 오른쪽 1왼쪽 2 위 3 아래
-dx = [1,-1,0,0]
-dy = [0,0,-1,1]
+#0 오른쪽 1아래 2 왼 3 위
+dx = [1, 0, -1, 0]
+dy = [0, 1, 0, -1]
 #
-dice = [
-	[1,1,1,1,1],
-	[5,5,5,5,5],
-	[1,4,6,3,1],
-	[2,2,2,2,2],
-  [1,1,1,1,1],
-]
-current_dice = [2,2] #(y,x)
-current = [0,0] #(y,x)
+up , front, right = 1,2,3
+
+current_x,current_y = 0,0 #(y,x)
 direction = 0
-
 def change_direction():
-	global  current
+	global  current_x,current_y
 	global  direction
-	global current_dice
-	dice_x =current_dice[1]+dx[direction]
-	dice_y = current_dice[0] + dy[direction]
-	if 0<=dice_x<5 and 0<=dice_y<5:
-		current_dice=[dice_y,dice_x]
-	elif dice>=5 and 0<=dice_y<5:
-		current_dice=[2,1]
-	elif dice_y >= 5 and 0 <= dice_x < 5:
-		current_dice=[1,2]
-	elif dice_x<0 and 0<=dice_y<5:
-		current_dice=[2,3]
-	elif dice_y < 0 and 0 <= dice_x < 5:
-		current_dice = [3, 2]
+	global up,front,right
 
-	if grid[current[0]][current[1]]>dice[current_dice[0]][current_dice[1]]:
-		if direction == 0 or direction ==1:
-			direction+=2
-		elif direction ==2:
-			direction = 1
-		else:
-			direction= 0
-	elif grid[current[0]][current[1]] < dice[current_dice[0]][current_dice[1]]:
-		if direction == 0 or direction ==1:
-			direction-=2
-		elif direction ==0:
-			direction = 3
-		else:
-			direction= 2
+	if direction == 0 : #오른쪽
+		up, front ,right = 7-right, front ,up
+	elif direction == 1: #아래쪽
+		up, front, right = 7 - front, up, right
+	elif direction ==2: #왼쪽
+		up, front, right = right, front, 7 - up
+	else: #위쪽
+		up, front, right = front, 7 - up, right
+
+	bottom = 7 - up
+	if grid[current_y][current_x] > bottom: # 반시계
+		direction = (direction -1 + 4 ) % 4
+	elif grid[current_y][current_x] < bottom: #시게
+		direction = (direction +1 ) %4
 
 
-def bfs(start):
+def bfs(target_num):
+	global current_x, current_y
 	visited = []
 	q = deque()
-	q.append(start)
-	check = grid[start[0]][start[1]]
+	total = 0
+	visited.append((current_y,current_x))
+	q.append((current_y,current_x))
 	while q:
-		cur_v = q.popleft()
+		y,x = q.popleft()
+		total += target_num
 		for i in range(4):
-			px = cur_v[0] + dx[i]
-			py = cur_v[1] + dy[i]
-			if 0<=px <n and 0<=py<n and grid[py][px] == check and [py,px] not in visited:
-				visited.append([py,px])
-				q.append([py,px])
-	return  check * len(visited)
+			px = x + dx[i]
+			py = y + dy[i]
+			if 0 <= px < n and 0 <= py < n and grid[py][px] == target_num and (py,px) not in visited:
+				visited.append((py,px))
+				q.append((py,px))
+	# total = target_num*  len(visited)
+	return total
+
 def move():
-	global  current
+	global current_x, current_y
 	global  direction
-	position_x= current[1]+dx[direction]
-	position_y= current[0]+dy[direction]
-	if 0<=position_x<n and 0<=position_y<n:
-		current = [position_y,position_x]
+	position_x= current_x+dx[direction]
+	position_y= current_y+dy[direction]
+
+	if 0 <= position_x < n and 0 <= position_y < n:
+		current_y, current_x = position_y, position_x
 	else:
-		if direction == 0 or direction ==2:
-			direction+=1
+		if direction == 0 or direction == 1:
+			direction += 2
 		else:
-			direction-=1
-		position_x = current[1] + dx[direction]
-		position_y = current[0] + dy[direction]
-		current = [position_y,position_x]
+			direction -= 2
+		position_x = current_x + dx[direction]
+		position_y = current_y + dy[direction]
+		current_y, current_x = position_y, position_x
 
 
-result =0
+result = 0
 for i in range(m):
 	move()
-	result +=bfs(current)
+	result += bfs(grid[current_y][current_x])
 	change_direction()
+
+
 print(result)
