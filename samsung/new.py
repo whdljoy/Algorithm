@@ -1,199 +1,248 @@
-# 4 4   m 개의 몬스터 1 팩맨
+DIR_NUM = 4
+OFFICE = 1
 
-# 몬스터는 상하좌우 대각선 턴단위
+# 변수 선언 및 입력:
+n, m, k = tuple(map(int, input().split()))
+grid = [
+	list(map(int, input().split()))
+	for _ in range(n)
+]
 
-# 턴
+# 각 위치의 시원함의 정도를 관리합니다.
+# 처음에는 전부 0입니다.
+coolness = [
+	[0] * n
+	for _ in range(n)
+]
 
-# 1 몬스터 복제
-# 2 몬스터 이동
+# 시원함을 mix할 때
+# 동시에 일어나는 처리를
+# 편하게 하기 위해 사용될 배열입니다.
+temp = [
+	[0] * n
+	for _ in range(n)
+]
 
-# 3 팩맨이동
-# 4 몬스터 시체 소멸
-# 5 몬스터 복제 완성
+# dx, dy 순서를 상좌우하로 설정합니다.
+# 입력으로 주어지는 숫자에 맞추며,
+# 4에서 현재 방향을 뺏을 때, 반대 방향이 나오도록 설정한 것입니다.
+dxs = [-1, 0, 0, 1]
+dys = [0, -1, 1, 0]
 
-# 1 현재의 위치에서 자신과 같은 방향을 가진 몬스터 복제
-# 부화 x  부화할시 동일하게 나옴
+# 현재 위치 (x, y)에서 해당 방향으로
+# 이동한다 했을 때 벽이 있는지를 나타냅니다.
+block = [
+	[
+		[False] * DIR_NUM
+		for _ in range(n)
+	]
+	for _ in range(n)
+]
 
-# 2 가진 방향대로 이동 - 칸에 몬스터 시체가 있거나 팩맨이있는경ㅇ
-# 반시계방향으로 45도  갈수있다면 가고 없으면 45 원래대로 돌아오면 고정
+# 시원함을 전파할 시
+# 한 에어컨에 대해
+# 겹쳐서 퍼지는 경우를 막기 위해
+# visited 배열을 사용합니다.
+visited = [
+	[False] * n
+	for _ in range(n)
+]
 
-
-# 3 팩맨 3 칸이동  상하 좌우 선택 몬스터를 가장많이 먹을수 있는방향
-# 방향이 여러거맨 상 좌 하 우  반시계 우선순위 격자 바깥을 나가는 경우 고려 x
-# 먹은 뒤 시체 남김 , 알은 먹지 않음 이동하는 과정에 있는 몬스터만 먹음 그자리에 있는 몬스터도 x
-
-
-# 4몬스터 시체는 2턴동안 유지
-
-# 5 알이었던 몬스터 부화 방향을 지닌채로
-
-# 구해야 할거 모든턴이 진행된두 살아남은 몬스터 수
-# 몬스터의 초기 위치와 팩맨의 초기 위치 같을 수 있음
-from collections import deque
-
-m, t = map(int, input().split())
-pack_y, pack_x = map(int, input().split())  # 팩맨 위치
-pack_y -=1
-pack_x -=1
-info = list(list(map(int, input().split())) for _ in range(m))
-# info  0  몬스터 y  info 1 몬스터 x  info 2 몬스터 방향
-# 1 위 2 왼위 3 왼 4 왼아래 5 아래 6 아래오 7오 8 오위  -반시계
-dx = [0, -1, -1, -1, 0, 1, 1, 1]
-dy = [-1, -1, 0, 1, 1, 1, 0, -1]
-# EGG = -1 # 방향과 함께면 빼서 방향값을 구한다
-EMPTY = 0
-MONSTER = 1
-
-egg = {}
-# egg = [[EMPTY for _ in range(4)] for _ in range(4)]
-# 0
-grid = [[EMPTY for _ in range(4)] for _ in range(4)]  # 몬스터 갯수
-
-# 몬스터 정보
-m_info = {}
-dead_monster = {}
+# 현재까지 흐른 시간(분)을 나타냅니다.
+elapsed_time = 0
 
 
-# 초기 셋팅
-
-def set_monster():
-	for i in range(4):
-		for j in range(4):
-			m_info[(i, j)] = []
-			dead_monster[(i, j)] = [0, 0, 0]
-	for item in info:
-		monster_y = item[0] - 1
-		monster_x = item[1] - 1
-		monster_d = item[2]
-		# 몬스터갯수
-		grid[monster_y][monster_x] += 1
-		# 몬스터 정보 저장
-		m_info[(monster_y, monster_x)].append(monster_d)
+# (x, y)가 격자 내에 있는지를 판단합니다.
+def in_range(x, y):
+	return 0 <= x and x < n and 0 <= y and y < n
 
 
-# 1 현재의 위치에서 자신과 같은 방향을 가진 몬스터 복제
-# 복제시도
-def clone():
-	# 어차피 턴 지날때마다 에그 초기화 되니 초기화
-	for i in range(4):
-		for j in range(4):
-			egg[(i, j)] = []
+# (dx, dy) 값으로부터
+# move_dir값을 추출해냅니다.
+def rev_dir(x_diff, y_diff):
+	for i, (dx, dy) in enumerate(zip(dxs, dys)):
+		if dx == x_diff and dy == y_diff:
+			return i
 
-	for item in m_info:
-		for val in m_info[item]:
-			egg[item].append(val)
+	return -1
 
 
-# 2 가진 방향대로 이동 - 칸에 몬스터 시체가 있거나 팩맨이있는경ㅇ
-# 반시계방향으로 45도  갈수있다면 가고 없으면 45 원래대로 돌아오면 고정
+# (x, y)위치에서 move_dir 방향으로
+# power 만큼의 시원함을 만들어줍니다.
+# 이는 그 다음 칸에게도 영향을 끼칩니다.
+def spread(x, y, move_dir, power):
+	# power가 0이 되면 전파를 멈춥니다.
+	if power == 0:
+		return
 
-# 몬스터 이동
-def move():
-	global dx
-	global dy
-	print("check",grid)
-	tmp = {}
-	for i in range(4):
-		for j in range(4):
-			tmp[(i, j)] = []
+	# 방문 체크를 하고, 해당 위치에 power를 더해줍니다.
+	visited[x][y] = True
+	coolness[x][y] += power
 
-	for item in m_info:
-		for target in m_info[item]:
-			target_y = item[0]
-			target_x = item[1]
-			target_d = target -1
-			print("target", target_y, target_x,target_d)
-			while (1):
-				change_y = target_y + dy[target_d]
-				change_x = target_x + dx[target_d]
-				# 가려는 위치 찾기 #몬스터 시체 #팩맨
-				if 0 <= change_y < 4 and 0 <= change_x < 4 and  ((change_y,change_x) != (pack_y,pack_x)) \
-					and dead_monster[(change_y, change_x)][0] == 0 and dead_monster[(change_y, change_x)][1] == 0:
-					grid[target_y][target_x] -= 1
-					grid[change_y][change_x] += 1
-					tmp[(change_y, change_x)].append(target_d)  # 이전 위치에서 뽑아서 다음 위치에 저장
-					# print("target",target_x,target_y)
-					print("change", change_y,change_x)
-					print(target_d)
-					break
-				else:
-					# 0 위 1 왼위 2 왼 3 왼아래 4 아래 5 아래오 6오 7 오위  -반시계
-					target_d = (target_d + 1 ) % 8
-					if target_d == target - 1:
-						tmp[(target_y, target_x)].append(target) #이전 위치 그대로 넣어줌
-						break
-	for change in tmp:
-		m_info[change] = tmp[change]
-	print("move",grid)
-# 3 팩맨 3 칸이동  상하 좌우 선택 몬스터를 가장많이 먹을수 있는방향
-# 방향이 여러거맨 상 좌 하 우  반시계 우선순위 격자 바깥을 나가는 경우 고려 x
-# 먹은 뒤 시체 남김 , 알은 먹지 않음 이동하는 과정에 있는 몬스터만 먹음 그자리에 있는 몬스터도 x
-def eat():
-	global pack_x, pack_y
-	mx = [0, -1, 0, 1]
-	my = [-1, 0, 1, 0]
-	can = []
-	best = (0, -1, -1, -1)
-	for i in range(4):
-		x1 = pack_x + mx[i]
-		y1 = pack_y + my[i]
-		if 0 <= x1 < 4 and 0 <= y1 < 4:
-			for j in range(4):
-				x2 = x1 + mx[j]
-				y2 = y1 + my[j]
-				if 0 <= x2 < 4 and 0 <= y2 < 4 and (x1,y1) != (x2,y2):
-					for a in range(4):
-						x3 = x2 + mx[a]
-						y3 = y2 + my[a]
-						if 0 <= x3 < 4 and 0 <= y3 < 4 and (x2,y2) != (x3,y3) and (x1 ,y1) != (x3,y3):
-							m_num = 0
-							if grid[y1][x1] != 0:
-								m_num += grid[y1][x1]
-							if grid[y2][x2] != 0:
-								m_num += grid[y2][x2]
-							if grid[y3][x3] != 0:
-								m_num += grid[y3][x3]
-							if best[0] <m_num:
-								best = (m_num,i,j,a)
+	# Case 1. 직진하여 전파되는 경우입니다.
+	nx, ny = x + dxs[move_dir], y + dys[move_dir]
+	if in_range(nx, ny) and not visited[nx][ny] and not block[x][y][move_dir]:
+		spread(nx, ny, move_dir, power - 1)
 
-	# print(best)
-	# 먹은 거 값 처리 및 시체 남기기 턴추가
-	dir0, dir1, dir2, dir3 = best
-	for move_dir in [dir1, dir2, dir3]:
-		nx = pack_x + mx[move_dir ]
-		ny = pack_y + my[move_dir ]
-		if grid[ny][nx]:
-			dead_monster[(ny, nx)][2] += grid[ny][nx]
-			grid[ny][nx] = 0
-			m_info[(ny, nx)] = []
-		pack_x, pack_y = nx, ny
-	# print(grid)
-def monster_remove():
-	for key in dead_monster:
-		for i in range(2):
-			dead_monster[key][i] = dead_monster[key][i + 1]
-		dead_monster[key][2] = 0
+	# Case 2. 대각선 방향으로 전파되는 경우입니다.
+	if dxs[move_dir] == 0:
+		for nx in [x + 1, x - 1]:
+			ny = y + dys[move_dir]
+			# 꺾여 들어가는 곳에 전부 벽이 없는 경우에만 전파가 가능합니다.
+			if in_range(nx, ny) and not visited[nx][ny] and \
+				not block[x][y][rev_dir(nx - x, 0)] and not block[nx][y][move_dir]:
+				spread(nx, ny, move_dir, power - 1)
+
+	else:
+		for ny in [y + 1, y - 1]:
+			nx = x + dxs[move_dir]
+			# 꺾여 들어가는 곳에 전부 벽이 없는 경우에만 전파가 가능합니다.
+			if in_range(nx, ny) and not visited[nx][ny] and \
+				not block[x][y][rev_dir(0, ny - y)] and not block[x][ny][move_dir]:
+				spread(nx, ny, move_dir, power - 1)
 
 
-def birth():
-	for key in egg:
-		for item in egg[key]:
-			# print(item)
-			m_info[key].append(item)
-		grid[key[0]][key[1]] += len(egg[key])
+def clear_visited():
+	for i in range(n):
+		for j in range(n):
+			visited[i][j] = False
 
-turn = 0
-set_monster()
-for _ in range(t):
-	# print(grid)
-	clone()
-	move()
-	# print(grid)
-	eat()
-	# print(grid)
-	monster_remove()
-	# print(grid)
-	birth()
-	# print(grid)
-# print(grid)
-print(sum(map(sum, grid)))
+
+# 에어컨에서 시원함을 발산합니다.
+def blow():
+	# 각 에어컨에 대해
+	# 시원함을 발산합니다.
+	for x in range(n):
+		for y in range(n):
+			# 에어컨에 대해
+			# 해당 방향으로 시원함을
+			# 만들어줍니다.
+			if grid[x][y] >= 2:
+				move_dir = (3 - grid[x][y]) if grid[x][y] <= 3 \
+					else (grid[x][y] - 2)
+
+				nx, ny = x + dxs[move_dir], y + dys[move_dir]
+
+				# 전파 전에 visited 값을 초기화해줍니다.
+				clear_visited()
+				# 세기 5에서 시작하여 계속 전파합니다.
+				spread(nx, ny, move_dir, 5)
+
+
+# (x, y) 위치는
+# mix된 이후 시원함이
+# 얼마가 되는지를 계산해줍니다.
+def get_mixed_coolness(x, y):
+	remaining_c = coolness[x][y]
+	for i, (dx, dy) in enumerate(zip(dxs, dys)):
+		nx, ny = x + dx, y + dy
+		# 사이에 벽이 존재하지 않는 경우에만 mix가 일어납니다.
+		if in_range(nx, ny) and not block[x][y][i]:
+			# 현재의 시원함이 더 크다면, 그 차이를 4로 나눈 값 만큼 빠져나갑니다.
+			if coolness[x][y] > coolness[nx][ny]:
+				remaining_c -= (coolness[x][y] - coolness[nx][ny]) // 4
+			# 그렇지 않다면, 반대로 그 차이를 4로 나눈 값만큼 받아오게 됩니다.
+			else:
+				remaining_c += (coolness[nx][ny] - coolness[x][y]) // 4
+
+	return remaining_c
+
+
+# 시원함이 mix됩니다.
+def mix():
+	# temp 배열을 초기화 해줍니다.
+	for i in range(n):
+		for j in range(n):
+			temp[i][j] = 0
+
+	# 각 칸마다 시원함이 mix된 이후의 결과를 받아옵니다.
+	for i in range(n):
+		for j in range(n):
+			temp[i][j] = get_mixed_coolness(i, j)
+
+	# temp 값을 coolness 배열에 다시 옮겨줍니다.
+	for i in range(n):
+		for j in range(n):
+			coolness[i][j] = temp[i][j]
+
+
+# 외벽에 해당하는 칸인지를 판단합니다.
+def is_outer_wall(x, y):
+	return x == 0 or x == n - 1 or y == 0 or y == n - 1
+
+
+# 외벽과 인접한 칸 중
+# 시원함이 있는 곳에 대해서만
+# 1만큼 시원함을 하락시킵니다.
+def drop():
+	for i in range(n):
+		for j in range(n):
+			if is_outer_wall(i, j) and coolness[i][j] > 0:
+				coolness[i][j] -= 1
+
+
+# 시원함이 생기는 과정을 반복합니다.
+def simulate():
+	global elapsed_time
+
+	# Step1. 에어컨에서 시원함을 발산합니다.
+	blow()
+
+	# Step2. 시원함이 mix됩니다.
+	mix()
+
+	# Step3. 외벽과 인접한 칸의 시원함이 떨어집니다.
+	drop()
+
+	# 시간이 1분씩 증가합니다.
+	elapsed_time += 1
+
+
+# 종료해야 할 순간인지를 판단합니다.
+# 모든 사무실의 시원함의 정도가 k 이상이거나,
+# 흐른 시간이 100분을 넘게 되는지를 살펴봅니다.
+def end():
+	# 100분이 넘게 되면 종료해야 합니다.
+	if elapsed_time > 100:
+		return True
+
+	# 사무실 중에
+	# 시원함의 정도가 k 미만인 곳이
+	# 단 하나라도 있으면, 아직 끝내면 안됩니다.
+	for i in range(n):
+		for j in range(n):
+			if grid[i][j] == OFFICE and \
+				coolness[i][j] < k:
+				return False
+
+	# 모두 k 이상이므로, 종료해야 합니다.
+	return True
+
+
+for _ in range(m):
+	bx, by, bdir = tuple(map(int, input().split()))
+	bx -= 1
+	by -= 1
+
+	# 현재 위치 (bx, by)에서
+	# bdir 방향으로 나아가려고 했을 때
+	# 벽이 있음을 표시해줍니다.
+	block[bx][by][bdir] = True
+
+	nx, ny = bx + dxs[bdir], by + dys[bdir]
+	# 격자를 벗어나지 않는 칸과 벽을 사이에 두고 있다면,
+	# 해당 칸에서 반대 방향(3-bdir)으로 진입하려고 할 때도
+	# 벽이 있음을 표시해줍니다.
+	if in_range(nx, ny):
+		block[nx][ny][3 - bdir] = True
+
+# 종료조건이 만족되기 전까지
+# 계속 시뮬레이션을 반복합니다.
+while not end():
+	simulate()
+
+# 출력:
+if elapsed_time <= 100:
+	print(elapsed_time)
+else:
+	print(-1)
