@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ps.iml" filepath="$PROJECT_DIR$/ps.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ssafy/ssafy.iml" filepath="$PROJECT_DIR$/ssafy/ssafy.iml" />
     </modules>
   </component>
 </project>
