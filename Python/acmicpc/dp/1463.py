@@ -28,4 +28,4 @@ elif dp[n] !=0:
 else:
     print(dynamic(n))
 
-
+#테스트
