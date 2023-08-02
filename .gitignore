@@ -11,6 +11,11 @@ __pycache__/
 *.app
 .vscode/
 
+.idea
+*.iml
+out
+gen
+*.xml
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,cmake
