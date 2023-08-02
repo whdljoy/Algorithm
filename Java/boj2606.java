@@ -1,7 +1,6 @@
-import javax.sound.midi.SysexMessage;
 import java.util.*;
 import java.io.*;
-public class p2606 {
+public class boj2606 {
     static ArrayList<Integer> [] net;
     static boolean [] check;
     static int answer;

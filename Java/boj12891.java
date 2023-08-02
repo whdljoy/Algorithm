@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class problem12891 {
+public class boj12891 {
     static int myArr [];
     static int checkArr[];
     static int checkSecret;

@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-public class p1157 {
+public class boj1157 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int alpha [] = new int[26];

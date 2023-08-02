@@ -1,5 +1,5 @@
 import java.util.*;
-public class problem2164 {
+public class boj2164 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Queue<Integer> q = new LinkedList<>();

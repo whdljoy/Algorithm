@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-public class p10828stack {
+public class boj10828{
     public static void main(String[] args) throws IOException {
         Stack<Integer> stack = new Stack<>();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

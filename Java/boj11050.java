@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class problem11050 {
+public class boj11050 {
     static int N, K;
     static int D [][];
     public static void main(String[] args) {

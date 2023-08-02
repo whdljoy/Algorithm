@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class problem1707 {
+public class boj1707 {
     static ArrayList<Integer>[]  A;
     static int[] check;
     static boolean[] visited;

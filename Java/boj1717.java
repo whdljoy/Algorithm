@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class problem1717 {
+public class boj1717 {
     static int [] parent;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
