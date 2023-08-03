@@ -15,7 +15,7 @@ import java.util.StringTokenizer;
  *
  *
  */
-public class boj11659 {
+public class boj11660 {
 	static int N=0;
 	static int M=0;
 	static int [][] num;
