@@ -1,4 +1,4 @@
-package com.ssafy.bj;
+
 import java.util.*;
 
 import java.io.*;
@@ -20,9 +20,9 @@ import java.io.*;
 
 //총 k 년이 지난 후 상도의 땅에 살아있는 나무의 갯수
 
-public class Main_16235_나무재테크 {
+public class  boj16235{
 	static int M,N,K;
-	static List<Integer> [][] ground;
+	static Deque<Integer> [][] ground;
 	static List<Integer> [][] dead;
 	static int [][] food;
 	static int [][] start;
@@ -49,12 +49,12 @@ public class Main_16235_나무재테크 {
 		N  = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		K = Integer.parseInt(st.nextToken());
-		ground = new ArrayList[N+1][N+1];
+		ground = new ArrayDeque[N+1][N+1];
 		food = new int[N+1][N+1];
 		start = new int[N+1][N+1];
 		for(int y=0;y<=N;y++) {
 			for(int x=0;x<=N;x++) {
-				ground[y][x] = new ArrayList<Integer>();
+				ground[y][x] = new ArrayDeque<Integer>();
 			}
 		}
 		for(int y=1;y<=N; y++) {
@@ -69,7 +69,7 @@ public class Main_16235_나무재테크 {
 			int y = Integer.parseInt(st.nextToken());
 			int x = Integer.parseInt(st.nextToken());
 			int z = Integer.parseInt(st.nextToken());
-			ground[y][x].add(z);
+			ground[y][x].addLast(z);
 		}
 	}
 	
@@ -85,22 +85,16 @@ public class Main_16235_나무재테크 {
 		}		
 		for(int y=1;y<=N; y++) {
 			for(int x=1; x<=N;x++) {
-				if(ground[y][x].size()>0) {
-					Collections.sort(ground[y][x]);
-					int index = -1;
-					for(int idx=0; idx<ground[y][x].size(); idx++) {
-						int tree =ground[y][x].get(idx);
+				if(!ground[y][x].isEmpty()){
+					int num = ground[y][x].size();
+					for(int idx=0; idx<num; idx++) {
+						int tree = ground[y][x].pollFirst();
 						if(tree <= food[y][x]) {
 							food[y][x] -= tree;
-							ground[y][x].set(idx, tree+1);
-						}else {
-							index =idx;
-							break;
+							ground[y][x].addLast(tree+1);
+						}else{
+							dead[y][x].add(tree);
 						}
-					}
-					if(index != -1) {
-						dead[y][x] =new ArrayList<Integer>(ground[y][x].subList(index, ground[y][x].size()));
-						ground[y][x].subList(index, ground[y][x].size()).clear();
 					}
 				}
 			}
@@ -123,20 +117,32 @@ public class Main_16235_나무재테크 {
 	}
 	//가을 : 나무 번식 -> 번식하는 나무는 나이가 5의 배수 인접한 8개의 칸에 나이가 1인 나무 생김
 	public static void fall() {
+		int [][] count = new int[N+1][N+1];
 		for(int y=1;y<=N; y++) {
 			for(int x=1;x<=N; x++) {
-				if(ground[y][x].size()>0) {
-					for(int idx=0; idx<ground[y][x].size(); idx++) {
-						int tree =ground[y][x].get(idx);
+				if(!ground[y][x].isEmpty()) {
+					int num = ground[y][x].size();
+					for(int idx=0; idx<num; idx++) {
+						int tree =ground[y][x].pollFirst();
 						if(tree % 5 ==0) {
 							for(int dir=0; dir<8;dir++) {
 								int cx = x+ dx[dir];
 								int cy = y + dy[dir];
 								if(in_range(cx, cy)) {
-									ground[cy][cx].add(1);
+									count[cy][cx]++;
 								}
 							}
 						}
+						ground[y][x].addLast(tree);
+					}
+				}
+			}
+		}
+		for(int y=1;y<=N; y++){
+			for(int x=1;x<=N; x++){
+				if(count[y][x] !=0){
+					for(int a=0; a<count[y][x];a++){
+						ground[y][x].addFirst(1);
 					}
 				}
 			}
@@ -156,7 +162,7 @@ public class Main_16235_나무재테크 {
 		ans =0;
 		for(int y=1;y<=N; y++) {
 			for(int x=1;x<=N; x++) {
-				if(ground[y][x].size()>0) {
+				if(!ground[y][x].isEmpty()) {
 					ans += ground[y][x].size();
 				}
 			}
