@@ -14,7 +14,7 @@ public class swea9229 {
             sb.append("#").append(i+1).append(" ");
             input(br);
             ans=-1;
-            check(0,0);
+            check(0,0,-1);
             sb.append(ans);
             System.out.println(sb);
         }
@@ -32,17 +32,17 @@ public class swea9229 {
         }
     }
 
-    public static void check(int num ,int sum){
+    public static void check(int num ,int sum,int idx){
         if(num ==2){
             if(sum <=M) {
                 ans = Math.max(ans, sum);
             }
             return;
         }
-        for(int i=0;i<info.size();i++){
+        for(int i=idx+1;i<info.size();i++){
             sum +=info.get(i);
             num +=1;
-            check(num,sum);
+            check(num,sum,i);
             num-=1;
             sum -= info.get(i);
         }
