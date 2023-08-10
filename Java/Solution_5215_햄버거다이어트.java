@@ -1,5 +1,4 @@
 
-
 import java.util.*;
 import java.io.*;
 
@@ -13,6 +12,7 @@ public class Solution_5215_햄버거다이어트 {
 	static int calories; // 제한 칼로리
 	static boolean [] check;
 	static int ans=0;
+	static StringBuilder sb = new StringBuilder();
 	public static void main(String[] args)throws Exception {
 		tc = Integer.parseInt(br.readLine());
 		run();
@@ -32,15 +32,12 @@ public class Solution_5215_햄버거다이어트 {
 	}
 	
 	static void run() throws Exception{
-		StringBuilder sb = new StringBuilder();
 		for(int j=0;j<tc; j++) {
 			sb.append("#").append(j+1).append(" ");
 			ans =0;
 			input();
-			for(int i=1; i<=num_f;i++) {
-				check= new boolean[num_f];
-				cal(i,0, 0);
-			}
+			check= new boolean[num_f];
+			cal(0, 0,0);
 			sb.append(ans).append("\n");
 		}
 		bw.write(sb.toString());
@@ -48,19 +45,19 @@ public class Solution_5215_햄버거다이어트 {
 		bw.close();
 		
 	}
-	static void cal(int num,int food_c,int sum) {
-		if(num==0) {
-			if(food_c<=calories) {
-				ans = Math.max(ans, sum);
-			}
+	static void cal(int food_c,int sum,int idx) {
+		if(food_c<=calories) {
+			ans = Math.max(ans, sum);
+		}		
+		if(food_c > calories || idx ==(num_f)) {
 			return;
 		}
-		for(int i=0;i<num_f;i++) {
+		for(int i=idx;i<num_f;i++) {
 			if(!check[i]) {
 				check[i]= true;
 				sum += food[i][0];
 				food_c += food[i][1];
-				cal(num--, food_c,sum);
+				cal(food_c,sum,i+1);
 				check[i] = false;
 				sum -= food[i][0];
 				food_c -= food[i][1];
