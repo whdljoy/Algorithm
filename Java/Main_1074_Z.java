@@ -1,4 +1,4 @@
-package com.ssafy.bj;
+
 
 import java.util.*;
 import java.io.*;
@@ -8,17 +8,13 @@ public class Main_1074_Z {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static int N;
 	static int r;
-	static int cur;
 	static int c;
-	static int[][] origin;
-	static int[] dx = { 0, 1, 0, 1 };
-	static int[] dy = { 0, 0, 1, 1 };
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		input();
 		int cur = (int) Math.pow(2, N);
-		dfs(0, N - 1, cur, cur);// N=3
+		dfs(0, N - 1, cur, cur);//
 
 	}
 
@@ -29,27 +25,37 @@ public class Main_1074_Z {
 		r += 1;
 		c = Integer.parseInt(st.nextToken());
 		c += 1;
-		origin = new int[N + 1][N + 1];
 	}
 
 	static void dfs(int start, int num, int x, int y) {
-		if (r == y && (c) == x) {
-			System.out.print(start);
+		int  current = (int) Math.pow(2, num);
+		int pow_c = current * current;
+		if ( num==0) {
+			if ((c <= x -current) && (r <= y -current)){
+				System.out.println(start);
+			}
+			else if ((c > x -current) && (r <= y -current)) { // 2사분면
+				System.out.println(start+1);
+			}
+			else if ((c <= x -current) && (r > y -current)) { // 3사분면
+				System.out.println(start+2);
+			}
+			else if ((c > x -current) && (r > y -current)) { // 4사분면
+				System.out.println(start+3);
+			}
 			return;
 		}
-		int current = (int) Math.pow(2, num);
-		current = current * current;
-		if (c <= x / 2 && r <= y / 2) { // 1사분면
-			dfs(start, num - 1, x / 2, y / 2);
+		if ((c <= x -current) &&  (r <= y -current)) { // 1사분면
+			dfs(start, num - 1, x -current, y -current);
 		}
-		if (c > x / 2 && r <= y / 2) { // 2사분면
-			dfs(start + current * 1, num - 1, x, y / 2);
+		else if ((c > x -current) && (r <= y -current)) { // 2사분면
+			dfs(start + pow_c , num - 1, x, y -current);
 		}
-		if (c <= x / 2 && r > y / 2) { // 3사분면
-			dfs(start + current * 2, num - 1, x / 2, y);
+		else if ((c <= x -current) && (r > y -current)) { // 3사분면
+			dfs(start + pow_c  * 2, num - 1, x -current, y);
 		}
-		if (c > x / 2 && r > y / 2) { // 4사분면
-			dfs(start + current * 3, num - 1, x, y);
+		else if ((c > x -current) && (r > y -current)) { // 4사분면
+			dfs(start + pow_c  * 3, num - 1, x, y);
 		}
 
 	}
