@@ -4,8 +4,8 @@ public class Main_1987_알파벳 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static int R; // 세로
     static int C;// 가로
-    static char [][] origin;
-    static Set <Character> data;
+    static int [][] origin;
+    static Set <Integer> data;
     static int ans;
     static int [] dx = {-1,0,1,0};
     static int  [] dy = {0,-1,0,1};
@@ -24,12 +24,12 @@ public class Main_1987_알파벳 {
         R = Integer.parseInt(st.nextToken());
         C= Integer.parseInt(st.nextToken());
 
-        origin = new char[R][C];
+        origin = new int[R][C];
 
         for(int y=0; y<R; y++){
             String ip = br.readLine();
             for(int x=0; x<C;x++){
-                origin[y][x] = ip.charAt(x);
+                origin[y][x] = ip.charAt(x)-'0';
             }
 
         }

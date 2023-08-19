@@ -8,6 +8,7 @@ public class perandcom{
     static int comCount; // 조합 갯수
     static int dupComCount; // 중복 조합 갯수
     static int num; // 뽑을 갯수
+    static final int MAX=5;
 
     public static void main(String[] args) {
         arr = new int[] {1,2,3,4};
@@ -29,7 +30,6 @@ public class perandcom{
         dupCombination(new ArrayList<Integer>(), 0, num);
         System.out.println("[중복조합 갯수] " + dupComCount);
     }
-
     // 순열
     public static void permutation(ArrayList<Integer> list, int count) {
         // 다 뽑았을 때
