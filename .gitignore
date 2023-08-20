@@ -498,3 +498,7 @@ modules.xml
 *.ipr
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+iml
+Python/.DS_Store
+.DS_Store
+.vscode/launch.json
+.vscode/c_cpp_properties.json
