@@ -1,5 +1,17 @@
 # STL
 
+  
+
+```c++
+Struct
+
+bool operator < (Student &student){
+	return this->score < student.score;
+}
+
+
+```
+
 
 
 ## std :: vector  -dynamic array
@@ -71,6 +83,18 @@ find(v.begin(), v.end(), 3)
 //vector의 범위에 찾을 대상이 없는 경우 마지막 반복자인 v.end()를 반환
 ```
 
+```c++
+bool sorting(pair <int,int> p, pair <int,int> p2) { // compare 함수
+    if (p.first == p2.first) { // x 좌표가 같다면
+        return p.second < p2.second; // y 좌표를 오름차순으로
+    }
+    
+    return p.first < p2.first; // x 좌표가 같지 않다면 x 좌표를 오름차순으로
+}
+ //sort(dv 배열의 시작점,dv 배열의 시작점 + 10,greater 사용(내림차순 정렬))
+ sort(dv,dv+10,greater<double>());
+```
+
 
 
 ## std :: deque -앞, 뒤에 데이터를 빠르게 넣고 뺄 수 있는 double-ended queue
@@ -137,3 +161,10 @@ find(v.begin(), v.end(), 3)
 ## std::priority_queue
 
 Container를 max heap으로 유지합니다. 데이터가 완벽히 정렬된 상태는 아니지만 최댓값은 빠르게 찾을 수 있습니다. 연속적으로 데이터의 최댓값 또는 최솟값만 필요할 때는 상수가 큰 std::set보다 훨씬 효율적으로 동작합니다.
+
+```c++
+	priority_queue<int> q;	// 내림차순 
+	priority_queue<int, vector<int>, less<int> > q;	// 내림차순
+	priority_queue<int, vector<int>, greater<int> > q;	// 오름차순
+```
+
