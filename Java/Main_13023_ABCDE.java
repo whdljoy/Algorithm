@@ -6,20 +6,19 @@ public class Main_13023_ABCDE {
     static int ans =0;
     static List <Integer> [] graph;
     static boolean[] check;
+    static boolean flag;
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     public static void main(String[] args) throws Exception{
         input();
         for(int i=0;i<N;i++){
-            if(!check[i] && !graph[i].isEmpty()){
+            check = new boolean[N];
+            dfs(i,0);
+            if(flag){
                 ans =1;
-                bfs(i);
+                break;
             }
         }
-        if(ans >=5){
-            System.out.println(1);
-        }else{
-            System.out.println(0);
-        }
+        System.out.println(ans);
     }
     static void input() throws Exception{
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -35,21 +34,22 @@ public class Main_13023_ABCDE {
             int s = Integer.parseInt(st.nextToken());
             int e = Integer.parseInt(st.nextToken());
             graph[s].add(e);
+            graph[e].add(s);
         }
-        check = new boolean[N];
     }
-    static void bfs(int num){
-        check [num]= true;
-        Queue <Integer> q = new ArrayDeque<>();
-        q.add(num);
-        while(!q.isEmpty()){
-            int cur = q.poll();
-            for(int node : graph[cur]){
-                if(!check[node]){
-                    q.add(node);
-                    check[node]=true;
-                    ans++;
-                }
+    static void dfs(int idx,int num){
+        if(num ==5){
+            flag =true;
+            return;
+        }
+        for(int node : graph[idx]){
+            if(!check[node]){
+                check[node] =true;
+                dfs(node,num+1);
+                check[node] = false;
+            }
+            if(flag){
+                return;
             }
         }
     }
