@@ -16,7 +16,7 @@ public class Main_17471_게리멘더링 {
         for(int idx =1;idx<=N; idx++){
             check =new boolean[N+1];
             check[idx] = true;
-            dfs(idx,0);
+            dfs(idx,0,idx);
             if(ans ==0){
                 break;
             }
@@ -48,10 +48,9 @@ public class Main_17471_게리멘더링 {
             }
         }
 
-
     }
 
-    static void dfs(int idx,int num){
+    static void dfs(int idx,int num,int flag){
         if(can_region()){
             cal_min();
         }
@@ -59,23 +58,25 @@ public class Main_17471_게리멘더링 {
             return;
         }
         for(int cur :graph[idx]){
-            if(!check[cur]){
+            if(!check[cur]&& cur >flag){
                 check[cur]=true;
-                dfs(cur,num+1);
+                dfs(cur,num+1,flag);
                 check[cur]=false;
             }
         }
     }
 
     static boolean can_region(){
-        Set <Integer> tmp = new HashSet<>();
+        boolean [] cur = new boolean[N+1];
         for(int i=1; i<=N;i++){
             if(!check[i]){
-                tmp.addAll(graph[i]);
+                for(int num: graph[i]){
+                    cur[num] = true;
+                }
             }
         }
         for(int i=1; i<=N;i++){
-            if(!check[i] && !tmp.contains(i)){
+            if(!check[i] && !cur[i]){
                     return false;
 
             }
