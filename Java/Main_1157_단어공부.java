@@ -1,6 +1,5 @@
-import java.util.*;
 import java.io.*;
-public class boj1157 {
+public class Main_1157_단어공부 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int alpha [] = new int[26];

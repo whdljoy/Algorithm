@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class boj1012 {
+public class Main_1012_유기농배추 {
     static boolean [][] visited;
     static int [][] info;
     static int M;

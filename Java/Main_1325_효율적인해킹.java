@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class boj1325 {
+public class Main_1325_효율적인해킹 {
     static int M;
     static int N;
     static List<Integer>[] info;

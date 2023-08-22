@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class boj1541 {
+public class Main_1541_잃어버린괄호 {
     static int answer =0;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);

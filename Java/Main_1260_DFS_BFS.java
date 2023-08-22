@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-public class boj1260 {
+public class Main_1260_DFS_BFS {
     static ArrayList<Integer>[] info;
     static boolean [] check;
     static StringBuilder bdd;

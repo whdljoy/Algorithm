@@ -3,7 +3,7 @@ import java.util.*;
 import java.io.*;
 
 
-public class boj2023 {
+public class Main_2023_신기한소수 {
 	static ArrayList<Integer > ans;
 	
 	public static void main(String[] args) throws IOException {

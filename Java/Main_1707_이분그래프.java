@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class boj1707 {
+public class Main_1707_이분그래프 {
     static ArrayList<Integer>[]  A;
     static int[] check;
     static boolean[] visited;

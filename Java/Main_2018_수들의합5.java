@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class boj2018 {
+public class Main_2018_수들의합5 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int N = sc.nextInt();

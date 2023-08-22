@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-public class boj1330 {
+public class Main_1330_두수비교하기 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());

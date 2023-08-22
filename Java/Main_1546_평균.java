@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class boj1546 {
+public class Main_1546_평균 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int num = sc.nextInt();
