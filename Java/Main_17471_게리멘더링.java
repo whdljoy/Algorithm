@@ -9,17 +9,14 @@ public class Main_17471_게리멘더링 {
     static int [] people;
     static boolean[] check;
     static int ans =Integer.MAX_VALUE;
+    static boolean [] visited;
 
     static List <Integer> [] graph;
     public static void main(String[] args) throws Exception{
         input();
         for(int idx =1;idx<=N; idx++){
             check =new boolean[N+1];
-            check[idx] = true;
-            dfs(idx,0,idx);
-            if(ans ==0){
-                break;
-            }
+            dfs(1,idx);
         }
         if(ans==Integer.MAX_VALUE){
             ans=-1;
@@ -50,38 +47,49 @@ public class Main_17471_게리멘더링 {
 
     }
 
-    static void dfs(int idx,int num,int flag){
-        if(can_region()){
-            cal_min();
+    static void dfs(int idx,int num){
+        if(num == idx){
+            if(can_region()){
+                cal_min();
+            }
         }
-        if(num == N-1){
-            return;
-        }
-        for(int cur :graph[idx]){
-            if(!check[cur]&& cur >flag){
-                check[cur]=true;
-                dfs(cur,num+1,flag);
-                check[cur]=false;
+        for(int i=idx; i<N ;i++){
+            if(!check[i]){
+                check[i]=true;
+                dfs(i+1,num+1);
+                check[i]=false;
             }
         }
     }
 
     static boolean can_region(){
-        boolean [] cur = new boolean[N+1];
-        for(int i=1; i<=N;i++){
-            if(!check[i]){
-                for(int num: graph[i]){
-                    cur[num] = true;
+        int region=0;
+        visited = new boolean[N+1];
+        for(int i=1;i<=N;i++){
+            if(!visited[i]){
+                bfs(i);
+                region++;
+            }
+        }
+        if( region ==2) return true;
+        return false;
+    }
+
+    static void bfs(int start){
+        Queue <Integer> q = new ArrayDeque<>();
+        q.add(start);
+        visited [start] =true;
+        boolean flag = check[start];
+        while(!q.isEmpty()){
+            int cur = q.poll();
+            for( int node :graph[cur]){
+                if(!visited[node] && check[node] == flag){
+                    q.add(node);
+                    visited[node]=true;
                 }
             }
         }
-        for(int i=1; i<=N;i++){
-            if(!check[i] && !cur[i]){
-                    return false;
 
-            }
-        }
-        return true;
     }
     static void cal_min(){
         int pa= 0;
