@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class boj11050 {
+public class Main_11050_이항계수1 {
     static int N, K;
     static int D [][];
     public static void main(String[] args) {

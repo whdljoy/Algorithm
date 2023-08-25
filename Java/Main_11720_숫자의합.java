@@ -1,5 +1,5 @@
 import java.util.Scanner;
-public class boj11720 {
+public class Main_11720_숫자의합 {
     public static void main(String[]args){
         Scanner sc =  new Scanner(System.in);
         int N = sc.nextInt();

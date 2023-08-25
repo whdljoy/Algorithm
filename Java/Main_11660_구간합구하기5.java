@@ -15,7 +15,7 @@ import java.util.StringTokenizer;
  *
  *
  */
-public class boj11660 {
+public class Main_11660_구간합구하기5 {
 	static int N=0;
 	static int M=0;
 	static int [][] num;

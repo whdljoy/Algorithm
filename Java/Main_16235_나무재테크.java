@@ -20,7 +20,7 @@ import java.io.*;
 
 //총 k 년이 지난 후 상도의 땅에 살아있는 나무의 갯수
 
-public class  boj16235{
+public class Main_16235_나무재테크 {
 	static int M,N,K;
 	static Deque<Integer> [][] ground;
 	static List<Integer> [][] dead;

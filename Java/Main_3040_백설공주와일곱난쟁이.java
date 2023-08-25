@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class boj3040 {
+public class Main_3040_백설공주와일곱난쟁이 {
     static int[] info;
     static boolean [] checked;
     static List<Integer> ans;

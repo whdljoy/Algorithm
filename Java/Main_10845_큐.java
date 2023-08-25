@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class boj10845 {
+public class Main_10845_큐 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());

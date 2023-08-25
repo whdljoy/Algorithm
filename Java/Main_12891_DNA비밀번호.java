@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class boj12891 {
+public class Main_12891_DNA비밀번호 {
     static int myArr [];
     static int checkArr[];
     static int checkSecret;

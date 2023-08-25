@@ -2,7 +2,7 @@
 import java.util.*;
 import java.io.*;
 
-public class boj9012 {
+public class Main_9012_괄호 {
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

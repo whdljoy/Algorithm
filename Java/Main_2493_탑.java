@@ -3,7 +3,7 @@ import java.util.*;
 import java.io.*;
 
 
-public class boj2493{
+public class Main_2493_탑 {
 	static List <Integer> ans;
 	static List <tp> check;
 	static class tp{

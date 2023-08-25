@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-public class boj10866{
+public class Main_10866_덱 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
