@@ -5,6 +5,7 @@ public class Main_1600_말이되고픈원숭이 {
     static int K;
     static int W;
     static int H;
+
     static int [][] ground;
     static int [] dx = {-1,0,1,0};
     static int [] dy = {0, -1, 0,1};
