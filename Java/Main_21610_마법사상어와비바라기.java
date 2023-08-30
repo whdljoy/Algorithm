@@ -70,8 +70,8 @@ public class Main_21610_마법사상어와비바라기 {
     }
 
     static void change_cloud(int y,int x,int d,int s){
-        int cx = x + dx[d] * s%N;
-        int cy = y + dy[d] * s%N;
+        int cx = x + dx[d] * s % N;
+        int cy = y + dy[d] * s % N;
         //←, ↖, ↑, ↗, →, ↘, ↓, ↙
         switch (d){
             case 1:
