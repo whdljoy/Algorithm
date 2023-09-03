@@ -84,7 +84,7 @@ find(v.begin(), v.end(), 3)
 ```
 
 ```c++
-bool sorting(pair <int,int> p, pair <int,int> p2) { // compare 함수
+bool sorting(pair <int,int> p, pair <int,int> p2) { // compare 함수 sort에서 사용
     if (p.first == p2.first) { // x 좌표가 같다면
         return p.second < p2.second; // y 좌표를 오름차순으로
     }
@@ -101,6 +101,34 @@ bool sorting(pair <int,int> p, pair <int,int> p2) { // compare 함수
 
 - std::deque는 여러 개의 버퍼에 데이터를 나눠서 저장합니다. s
 - std::deque는 버퍼 하나만 할당하면 되므로, 데이터 삽입이 언제든 O(1)입니다
+
+```c++
+dq.begin() : dq의 첫 번째 원소를 가리키는 iterator
+    
+dq.end() : dq의 마지막 원소를 가리키는 iterator
+    
+dq.front() : dq의 첫 번째 원소
+    
+dq.back() : dq의 마지막 원소
+dq.at(n) : dq의 n번째 원소
+dq.assign(n) : 원소 n개를 0으로 초기화
+dq.assign(n,1) : 원소 n개를 1로 초기화
+    
+dq.push_front(x) : dq의 첫 번째 원소에 'x' 추가
+dq.push_back(x) : dq의 마지막 원소에 'x' 추가
+dq.pop_front() : dq의 첫 번째 원소 삭제
+dq.pop_back() : dq의 마지막 원소 삭제
+    
+dq.size() : dq의 원소 개수 리턴
+dq.resize(m) : dq의 메모리 공간 크기를 m으로 변경하고 늘어난 부분은 0으로 초기화
+dq.clear() : dq 전체 원소 clear!
+    
+dq.insert(iterator, x) : iterator가 가리키는 위치에 원소 'x' 삽입
+(기존 원소들은 한 칸씩 뒤로 밀려난다.)
+dq.erase(iterator) : iterator가 가리키는 위치의 dq원소를 삭제
+```
+
+
 
 ## std:: list
 
@@ -125,6 +153,68 @@ bool sorting(pair <int,int> p, pair <int,int> p2) { // compare 함수
 - Red-Black Tree는 Binary Search Tree이므로 어떤 key를 기준으로 데이터를 저장합니다. std::set은 데이터를 자체를 key로 사용하고, std::map은 (key, value) 쌍을 받아서 사용합니다.  
 
 - 단순히 데이터를 정렬 상태로 유지하고 싶다면 std::set을, (key, value) 데이터 쌍을 key를 기준으로 정렬하고 싶다면 std::map을 사용하면 됩니다.
+
+```c++
+map.begin()
+
+map.end()
+
+map.rbegin() - end()랑 같음
+
+map.rend() - begin()이랑 같음
+
+map.clear() - 모든 원소 제거
+
+map.count(key) - key값에 해당하는 원소들의 개수 반환
+
+map.empty() - 비어있으면 true, 아니면 false 반환
+
+map.insert(make_pair(key, value)) - 원소를 pair 형태로 삽입
+
+map["key"] = 5;  // 이렇게 삽입하는것도 가능
+
+map.insert(iter, k) - iter가 가리키는 위치부터 k를 삽입할 위치를 탐색하여 삽입
+
+map.erase(iter) - iter가 가리키는 원소 제거
+
+map.erase(key) - key에 해당하는 원소 제거
+
+map.erase(start, end)
+
+map.find(key) - key를 가리키는 iterator 반환. 없으면 map.end()의 iterator 반환
+```
+
+```
+Set 함수
+
+s.begin()
+s.end()
+s.rbegin()
+s.rend()
+
+s.clear()
+s.empty()
+s.size()
+s.count(k) //소 k의 개수 반환  // 무조건 0 아니면 1 -> multiset에서는 유용하게 쓰임
+
+s.insert(k)  //자동으로 정렬된 위치에 원소 k를 삽입
+
+s.insert(iter, k)  //iter가 가리키는 위치에 k 삽입
+
+s.erase(iter)// iter가 가리키는 위치의 원소 삭제
+
+s.erase(start, end)  //[start, end) 구간의 원소 삭제
+
+s.find(k) //원소 k가 가리키는 iter 반환 //k가 없으면 s.end()의 iter 반환
+
+s2.swap(s1) //s2와 s1을 완전히 바꿔줌
+
+s.upper_bound(k) //원소 k가 끝나는 구간의 반복자를 반환
+
+s.lower_bound(k) //원소 k가 시작하는 구간의 반복자를 반환
+
+s.equal_range(k)  원소 k가 시작하는 구간과 끝나는 구간의 반복자를 반환//upper + lower
+```
 
 
 
@@ -163,8 +253,105 @@ bool sorting(pair <int,int> p, pair <int,int> p2) { // compare 함수
 Container를 max heap으로 유지합니다. 데이터가 완벽히 정렬된 상태는 아니지만 최댓값은 빠르게 찾을 수 있습니다. 연속적으로 데이터의 최댓값 또는 최솟값만 필요할 때는 상수가 큰 std::set보다 훨씬 효율적으로 동작합니다.
 
 ```c++
-	priority_queue<int> q;	// 내림차순 
-	priority_queue<int, vector<int>, less<int> > q;	// 내림차순
-	priority_queue<int, vector<int>, greater<int> > q;	// 오름차순
+priority_queue<int> q;	// 내림차순 
+priority_queue<int, vector<int>, less<int> > q;	// 내림차순  -> 큰값우선
+priority_queue<int, vector<int>, greater<int> > q;	// 오름차순  -> 작은 값우선
+
+priority_queue<자료형, 구현체, 비교연산자> pq;
+
+empty : priorityqueue가 비어있는지 확인한다.
+size : priorityqueue의 크기를 확인한다.
+top : priorityqueue 내부의 제일 우선순위의 값을 보여준다.
+push : priorityqueue에 값을 삽입한다.
+emplace : priorityqueue에 구조를 삽입한다.
+pop : priorityqueue에서 제일 우선순위의 값을 제거한다.
+swap : 두개의 priorityqueue를 swap한다.(내부를 서로 바꾼다.)
+    
+    
+push와 emplace의 차이
+밑에서 더 설명하겠지만, 간단히 말하면 우선순위 큐의 경우 구조체를 많이 삽입하게 된다.
+
+push의 경우 단순히 queue에 값을 넣어준다. 다시 말하면 오브젝트로 제작후 삽입해야하므로 불필요한 복사가 많이 일어난다.
+
+emplace의 경우 오브젝트를 생성하지 않고 바로 값을 넣는다. 즉, copy와 constructor가 합쳐진 것이라 볼 수 있다.
+
+아래 예시코드로 두개의 사용법과 차이점을 자세히 살펴보자.
+    
+#include <queue> // 우선순위 큐를 위한 라이브러리
+#include <iostream> // cout사용을 위한 라이브러리
+#include <utility> // pair를 위한 라이브러리
+using namespace std; 
+    
+int main() { 
+    // pair를 요소로 갖는 priority_queue를 선언
+    priority_queue< pair<char, int> > pqueue; 
+        
+    // pair의 오브젝트를 만들지 않고 바로 값을 push한다
+    pqueue.emplace('a', 24); 
+        
+    // 아래의 주석처리된 명령어는 오류가 난다.
+    // pqueue.push('b', 25);     
+        
+    // push를 사용할 때에는 pair를 만들어 준 다음에 넣어야 한다. 이 과정에서 불필요한 복사가 일어난다.
+    pqueue.push(make_pair('b', 25));
+        
+    // 우선순위 큐 출력부분
+    while (!pqueue.empty()) { 
+        pair p =  pqueue.top(); 
+        cout << p.first << " "
+             << p.second << endl; 
+        pqueue.pop(); 
+    } 
+
+    // 출력 결과
+    // b 25
+    // a 24
+    return 0; 
+} 
+```
+
+```c++
+#include <iostream>
+#include <queue>
+#include <functional>    // greater
+using namespace std;
+ 
+struct Student {
+    int id;
+    int math, eng;
+    Student(int num, int m, int e) : id(num), math(m), eng(e) {}    // 생성자 정의
+    
+        // 그냥 점수에 상관 없이 학번기준 학번이 작은것이 Top 을 유지 한다
+    bool operator<(const Student s) const {    //연산자 오버로딩
+        return this->id > s.id;
+    }
+};
+ 
+// 학번을 기준으로 학번(id) 값이 큰 것이 Top 을 유지 하도록 한다.
+struct cmp {   //compare 함수
+    bool operator()(Student a, Student b) {
+        return a.id < b.id;
+    }
+};
+ 
+int main() {
+    // 위에서 만든 cmp 구조체를 넣어 준다.
+    priority_queue<Student, vector<Student>, cmp> pq;  
+ 
+ 
+    pq.push(Student(3, 100, 50));
+    pq.push(Student(1, 60, 50));
+    pq.push(Student(2, 80, 50));
+    pq.push(Student(4, 90, 50));
+    pq.push(Student(5, 70, 40));
+    
+    while (!pq.empty()) {
+        Student ts = pq.top(); pq.pop();
+        cout << "(학번, 수학 , 영어 ) : " << ts.id << ' ' << ts.math << ' ' << ts.eng << '\n';
+    }
+ 
+    return 0;
+}
+
 ```
 
