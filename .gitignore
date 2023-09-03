@@ -10,7 +10,6 @@ __pycache__/
 *.out
 *.app
 .vscode/
-
 .idea
 out
 gen
@@ -502,3 +501,4 @@ Python/.DS_Store
 .DS_Store
 .vscode/launch.json
 .vscode/c_cpp_properties.json
+C++/*.txt
