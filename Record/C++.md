@@ -81,3 +81,56 @@ int main(void){
 
 ```
 
+
+
+
+
+## 초기화
+
+### Memset
+
+```c++
+#include<string.h>
+
+memset(arr, 0, sizeof(int) * 5);
+
+int arr[10][10];
+
+for(int i=0; i<10; i++){
+
+	memset(arr[i], 0, sizeof(int)*10); //모든 값 0으로 초기화
+
+}
+
+
+memset(arr, 0, sizeof(arr)) - > 이거 하나로 다됨, 동적 할당일 떄 불가 
+```
+
+
+
+### fill
+
+```c++
+#include <algorithm>
+
+
+fill(visited, visited + 크기, false);
+fill(dist, dist + 크기, 987654321);
+fill(check[0][0], check[Row-1][Column],0);
+```
+
+
+
+
+
+## 동적할당
+
+```c++
+  //2차원 배열
+  origin = new int *[N];
+  for (int y = 0; y < N; y++)
+  {
+    origin[y] = new int[M];
+  }
+```
+
