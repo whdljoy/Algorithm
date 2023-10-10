@@ -12,6 +12,7 @@ public class Main_Samsung_토끼와경주 {
 	static HashMap <Integer,Integer> rabbit;
 	static int [] dx ={-1,0,1,0};
 	static int [] dy = {0,-1,0,1};
+	
 	static class Rabbit_in implements Comparable <Rabbit_in>{
 		int x;
 		int y;
@@ -48,9 +49,9 @@ public class Main_Samsung_토끼와경주 {
 		int x;
 		int y;
 		int pid;
-		int point;
+		long point;
 		int L;
-		Rabbit_out (int x,int y, int pid, int point ,int L){
+		Rabbit_out (int x,int y, int pid, long point ,int L){
 			this.x =x;
 			this.y =y;
 			this.pid =pid;
@@ -124,7 +125,7 @@ public class Main_Samsung_토끼와경주 {
 	}
 	
 	static void get_best() {
-		int ans =0;
+		long ans =0;
 		for(int i=1;i<=P;i++) {
 			//System.out.println(out[i].point);
 			ans =Math.max(ans, out[i].point);
@@ -152,39 +153,85 @@ public class Main_Samsung_토끼와경주 {
 		for(int rp=0; rp<K; rp++) {
 			Rabbit_in cur =race.poll();
 			int idx = rabbit.get(cur.pid);
-			int pos_x =cur.x;
-			int pos_y = cur.y;
-			
+			int pos_x =0;
+			int pos_y = 0;
+			Integer [] pos = getRightRabbit(cur.y,cur.x, out[idx].L);
 			//(행 번호 + 열 번호가 큰 칸, 행 번호가 큰 칸, 열 번호가 큰 칸) 
-			for(int dir =0; dir<4;dir++) {
-				int cx = cur.x +dx[dir] * out[idx].L;
-				int cy = cur.y +dy[dir] * out[idx].L;
-				if( cx < 1) {
-					cx =1;
-				}else if (cx >M) {
-					cx =M;
-				}
-				if( cy < 1) {
-					cy =1;
-				}else if (cy >N) {
-					cy =N;
-				}
-				
-				if(pos_x +pos_y < cx+cy) {
-					pos_x = cx;
-					pos_y = cy;
-				}else if((pos_x +pos_y) == (cx+cy)) {
-					if(pos_y <cy) {
+			int cy = pos[0];
+			int cx = pos[1];
+			if( (pos_x +pos_y) < (cx+cy)) {
+				pos_x = cx;
+				pos_y = cy;
+			}else if((pos_x +pos_y) == (cx+cy)) {
+				if(pos_y <cy) {
+					pos_x =cx;
+					pos_y =cy;
+				}else if (pos_y == cy) {
+					if(pos_x < cx) {
 						pos_x =cx;
-						pos_x =cy;
-					}else if (pos_y == cy) {
-						if(pos_x < cx) {
-							pos_x =cx;
-							pos_x =cy;
-						}
+						pos_y =cy;
 					}
 				}
 			}
+	//		System.out.println(cy + " "+cx + " right");
+			pos = getLeftRabbit(cur.y,cur.x, out[idx].L);
+			//(행 번호 + 열 번호가 큰 칸, 행 번호가 큰 칸, 열 번호가 큰 칸) 
+			cy = pos[0];
+			cx = pos[1];
+			if((pos_x +pos_y) < (cx+cy)) {
+				pos_x = cx;
+				pos_y = cy;
+			}else if((pos_x +pos_y) == (cx+cy)) {
+				if(pos_y <cy) {
+					pos_x =cx;
+					pos_y =cy;
+				}else if (pos_y == cy) {
+					if(pos_x < cx) {
+						pos_x =cx;
+						pos_y =cy;
+					}
+				}
+			}
+//			System.out.println(cy + " "+cx + " left");
+			pos = getUpRabbit(cur.y,cur.x, out[idx].L);
+			//(행 번호 + 열 번호가 큰 칸, 행 번호가 큰 칸, 열 번호가 큰 칸) 
+			cy = pos[0];
+			cx = pos[1];
+			if((pos_x +pos_y)< (cx+cy)) {
+				pos_x = cx;
+				pos_y = cy;
+			}else if((pos_x +pos_y) == (cx+cy)) {
+				if(pos_y <cy) {
+					pos_x =cx;
+					pos_y =cy;
+				}else if (pos_y == cy) {
+					if(pos_x < cx) {
+						pos_x =cx;
+						pos_y =cy;
+					}
+				}
+			}
+	//		System.out.println(cy + " "+cx + " up");
+			pos = getDownRabbit(cur.y,cur.x, out[idx].L);
+			//(행 번호 + 열 번호가 큰 칸, 행 번호가 큰 칸, 열 번호가 큰 칸) 
+			cy = pos[0];
+			cx = pos[1];
+			if((pos_x +pos_y) < (cx+cy)) {
+				pos_x = cx;
+				pos_y = cy;
+			}else if((pos_x +pos_y) == (cx+cy)) {
+				if(pos_y <cy) {
+					pos_x =cx;
+					pos_y =cy;
+				}else if (pos_y == cy) {
+					if(pos_x < cx) {
+						pos_x =cx;
+						pos_y =cy;
+					}
+				}
+			}			
+//			System.out.println(cy + " "+cx + " down");
+			
 			visited[idx] =true;
 			for(int i=1; i<=P;i++) {
 				if(i != idx) {
@@ -192,16 +239,16 @@ public class Main_Samsung_토끼와경주 {
 					out[i].point = out[i].point+ pos_x+pos_y;
 				}
 			}
-			out[idx].x=pos_x;
+			out[idx].x= pos_x;
 			out[idx].y =pos_y;
-			System.out.println(pos_y + " "+pos_x);
+//			System.out.println(pos_y + " "+pos_x + " "+ idx);
 			race.add(new Rabbit_in(pos_x,pos_y,cur.pid,cur.jump+1));
 			
-			for(int i=1; i<=P;i++) {
-				System.out.println(out[i].point);
-				
-			}	
-			System.out.println();
+//			for(int i=1; i<=P;i++) {
+//				System.out.println(out[i].point);
+//				
+//			}	
+//			System.out.println();
 		}
 		/**
 		 * 		K번의 턴이 모두 진행된 직후에는 (현재 서있는 행 번호 + 열 번호가 큰 토끼, 행 번호가 큰 토끼, 열 번호가 큰 토끼, 고유번호가 큰 토끼) 순으로 
@@ -236,9 +283,114 @@ public class Main_Samsung_토끼와경주 {
 	}
 	static void change_dis(int pid,int L) {
 		int idx = rabbit.get(pid);
-		out[idx].L = L;
+		out[idx].L *=L;
 	}
 	static boolean in_range(int y, int x) {
 		return 0<y && y<=N && 0<x && x<=M;
 	}
+    public static Integer[] getRightRabbit(int x, int y, int dis) {
+        dis %= 2 * (M - 1);
+    
+        if(dis >= M - y) {
+            dis -= (M - y);
+            y = M;
+        }
+        else {
+            y += dis;
+            dis = 0;
+        }
+    
+        if(dis >= y - 1) {
+            dis -= (y - 1);
+            y = 1;
+        }
+        else {
+            y -= dis;
+            dis = 0;
+        }
+        
+        y += dis;
+    
+        return new Integer[] {x,y};
+    }
+    public static Integer[] getLeftRabbit(int x, int y, int dis) {
+        dis %= 2 * (M - 1);
+    
+        if(dis >= y - 1) {
+            dis -= (y - 1);
+            y = 1;
+        }
+        else {
+        	y -= dis;
+            dis = 0;
+        }
+    
+        if(dis >= M - y) {
+            dis -= (M - y);
+            y = M;
+        }
+        else {
+            y += dis;
+            dis = 0;
+        }
+    
+        y -= dis;
+    
+        return new Integer[] {x,y};
+    } 
+    
+    public static  Integer[] getUpRabbit(int x, int y, int dis) {
+        dis %= 2 * (N - 1);
+    
+        if(dis >= x - 1) {
+            dis -= (x - 1);
+            x = 1;
+        }
+        else {
+            x -= dis;
+            dis = 0;
+        }
+    
+        if(dis >= N - x) {
+            dis -= (N - x);
+            x = N;
+        }
+        else {
+            x += dis;
+            dis = 0;
+        }
+    
+        x -= dis;
+    
+        return new Integer[] {x,y};
+    }
+    
+    // 토끼를 아래로 이동시킵니다.
+    public static  Integer[] getDownRabbit(int x, int y, int dis)  {
+        dis %= 2 * (N - 1);
+        
+    
+        if(dis >= N - x) {
+            dis -= (N - x);
+            x = N;
+        }
+        else {
+            x += dis;
+            dis = 0;
+        }
+    
+        if(dis >=x - 1) {
+            dis -= (x - 1);
+            x = 1;
+        }
+        else {
+            x -= dis;
+            dis = 0;
+        }
+        
+        x += dis;
+    
+        return new Integer[] {x,y};
+    }
+        
 }
