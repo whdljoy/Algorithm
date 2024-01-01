@@ -3,7 +3,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Main_9205_맥주마시면서걸어가기 {
+public class Main_9205_맥주마시면서걸어가지 {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringBuilder sb = new StringBuilder();
 	static int tc;
