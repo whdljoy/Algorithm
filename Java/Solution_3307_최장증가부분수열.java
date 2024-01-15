@@ -13,7 +13,7 @@ import java.io.*;
  * @author SSAFY
  *
  */
-public class Solution_3307_최장장기수열 {
+public class Solution_3307_최장증가부분수열 {
 	
 	
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

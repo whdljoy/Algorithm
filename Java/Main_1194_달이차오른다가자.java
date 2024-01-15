@@ -2,7 +2,7 @@
 
 import java.util.*;
 import java.io.*;
-public class Main_1994_달이차오른다가자 {
+public class Main_1194_달이차오른다가자 {
 	static int N;
 	static char origin[][];
 	static int M;
