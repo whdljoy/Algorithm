@@ -87,12 +87,14 @@ public class Solution_SegmentTree1 {
         max_segT[node] = Math.max(max_segT[node*2], max_segT[node*2+1]);
     }
     static void search(int node,int start,int end, int s ,int e ){
-        if(s > end || start > e) return ;
-        if(s==e) {
+        if(s > end || start > e) return;
+
+        if(s >= start && e <= end) {
             min = Math.min(min_segT[node],min);
             max = Math.max(max_segT[node],max);
             return;
         }
+
         int center = (s+e) /2;
         search(node*2,start,end, s,center );
         search(node*2+1,start,end, center+1 ,e );
