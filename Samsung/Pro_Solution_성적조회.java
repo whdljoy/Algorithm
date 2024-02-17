@@ -10,40 +10,85 @@ class Pro_Solution_성적조회 {
 
     static class UserSolution {
 
-        class Node{
+        class Node implements Comparable<Node>{
             int mScore;
-            String mGender;
+            int mGrade;
+            int  mGender;
             int mId;
 
-            Node (int mId,String mGender,int mScore){
+            Node (int mId,int mGrade,int mGender,int mScore){
                 this.mId = mId;
+                this.mGrade=mGrade;
                 this.mGender = mGender;
                 this.mScore = mScore;
             }
+
+            @Override
+            public int compareTo(Node o2){ // 오름차순
+                if(o2.mScore == this.mScore){
+                    return Integer.compare(this.mId ,o2.mId);
+                }
+                return Integer.compare(this.mScore,o2.mScore);
+            }
         }
 
-        List [] male;
-        List [] female;
+        TreeSet <Node> [][] student;
+        HashMap <Integer,Node> info;
         public void init() {
-            male = new ArrayList[4];
-            female = new ArrayList[4];
-            for(int i=0; i<4;i++){
-                male[i] = new ArrayList<Node>();
-                female[i] = new ArrayList<Node>();
+            student = new TreeSet[2][3];
+            for(int g=0;g<2;g++){
+                for(int m=0;m<3;m++ ){
+                    student[g][m] = new TreeSet<Node>();
+                }
             }
+            info = new HashMap<>();
             return;
         }
 
         public int add(int mId, int mGrade, char mGender[], int mScore) {
-            return 0;
+            int gender = mGender[0] == 'm'?  0: 1; // 남자면 0 여자면 1
+            student[gender][mGrade-1].add(new Node(mId,mGrade,gender,mScore));
+            info.put(mId,new Node(mId,mGrade,gender,mScore));
+            return student[gender][mGrade-1].last().mId;
+
         }
 
         public int remove(int mId) {
-            return 0;
+            int result =0;
+            if(!info.containsKey(mId)){
+                return 0;
+            }else{
+                Node rm = info.get(mId);
+                info.remove(mId);
+                student[rm.mGender][rm.mGrade-1].remove(rm);
+                if(student[rm.mGender][rm.mGrade-1].isEmpty()) result =0;
+                else result = student[rm.mGender][rm.mGrade-1].first().mId;
+            }
+            return result;
         }
 
         public int query(int mGradeCnt, int mGrade[], int mGenderCnt, char mGender[][], int mScore) {
-            return 0;
+            int answer =0;
+            int part = Integer.MAX_VALUE;
+            for(int i=0; i<mGenderCnt;i++){
+                int gender =mGender[i][0] =='m' ? 0:1;
+                for(int j=0;j<mGradeCnt;j++){
+                    int grade = mGrade[j]-1;
+                    TreeSet <Node> cur = student[gender][grade];
+                    Node high = cur.higher(new Node(0,grade,gender,mScore));
+                    if(high != null){
+                        if(high.mScore< part){
+                            answer = high.mId;
+                            part =high.mScore;
+                        }else if (high.mScore == part){
+                            if(high.mId <answer){
+                                answer = high.mId;
+                            }
+                        }
+                    }
+                }
+            }
+            return answer;
         }
     }
 
@@ -114,7 +159,7 @@ class Pro_Solution_성적조회 {
     public static void main(String[] args) throws Exception {
         int TC, MARK;
 
-        //System.setIn(new java.io.FileInputStream("res/sample_input.txt"));
+        System.setIn(new java.io.FileInputStream("res/sample_input.txt"));
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine(), " ");
