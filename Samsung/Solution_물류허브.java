@@ -1,7 +1,7 @@
 import java.util.Scanner;
 import java.util.*;
 
-class Solution {
+class Solution_물류허브 {
     private final static int MAX_N = 1400;
     private final static int CMD_INIT = 1;
     private final static int CMD_ADD = 2;

@@ -3,7 +3,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.StringTokenizer;
-
+import java.util.*;
 class Solution_SocialMedia {
 
     private static int mSeed;
@@ -28,44 +28,88 @@ class Solution_SocialMedia {
     private static BufferedReader br;
     private static UserSolution user = new UserSolution();
     static class UserSolution {
-        Queue< Post> status;
+        class Post implements Comparable<Post>{
+            int pID;
+            int uID;
+            int start_time;
+            int like;
+            int between_time;
+            Post(int pID, int uID, int start_time){
+                this.pID = pID;
+                this.uID = uID;
+                this.start_time = start_time;
+                this.like =0;
+            }
+            @Override
+            public int compareTo(Post o){
+                if(this.between_time <=1000 && o.between_time >1000){
+                    return -1;
+                }else if (this.between_time >1000 && o.between_time <=1000){
+                    return 1;
+                }else if (this.between_time <=1000 && o.between_time <=1000){
+                    if(this.like == o.like){
+                        return Integer.compare(o.start_time, this.start_time);
+                    }
+                    return Integer.compare(o.like,this.like);
+                }else{
+                    return Integer.compare(o.start_time,this.start_time);
+                }
+            }
+
+        }
+        List <Integer>[] user;
+        List <Integer>[] letter;
+        HashMap <Integer,Post> postInfo;
 
         public void init(int N)
 
         {
-            status = new ArrayDeque<>();
-            for(int i=1;i<=N;i++){
-                status.add(new Post(i,0,0));
+            user = new ArrayList[N+1];
+            letter = new ArrayList[N+1];
+            for(int i=0;i<=N;i++){
+                letter[i] = new ArrayList<Integer>();
+                user[i] = new ArrayList<Integer>();
+                user[i].add(i);
             }
+            postInfo = new HashMap<>();
         }
 
         public void follow(int uID1, int uID2, int timestamp)
         {
+            user[uID1].add(uID2);
         }
 
         public void makePost(int uID, int pID, int timestamp)
         {
+            letter[uID].add(pID);
+            postInfo.put(pID,new Post(pID,uID,timestamp));
         }
 
         public void like(int pID, int timestamp)
         {
+            Post cur = postInfo.get(pID);
+            cur.like+=1;
+            postInfo.put(pID,cur);
+
         }
 
         public void getFeed(int uID, int timestamp, int pIDList[])
         {
-        }
-    }
-    static class Post{
-        int uID;
-        int timestamp;
-        int like;
-        Post (int uID,int timestamp,int like){
-            this.uID = uID;
-            this.timestamp = timestamp;
-            this.like = like;
-        }
+            PriorityQueue <Post> feed = new PriorityQueue<>();
+            ArrayList<Integer> show = (ArrayList<Integer>) user[uID];
+            for(int number : show){
+                for(int p : letter[number]){
+                    Post cur = postInfo.get(p);
+                    cur.between_time = timestamp - cur.start_time;
+                    feed.add(cur);
+                }
+            }
 
-
+            int size = feed.size() >10 ? 10 : feed.size();
+            for(int i=0; i<size;i++){
+                pIDList[i] = feed.poll().pID;
+            }
+        }
     }
 
     private static boolean run() throws Exception
@@ -160,7 +204,7 @@ class Solution_SocialMedia {
                 uId1 = pseudo_rand() % n + 1;
                 user.getFeed(uId1, timestamp, pIdList);
                 stdin = new StringTokenizer(br.readLine(), " ");
-
+                //System.out.println("test");
                 for (int i = 0; i < 10; i++)
                 {
                     ans_pIdList[i] = Integer.parseInt(stdin.nextToken());
@@ -170,7 +214,7 @@ class Solution_SocialMedia {
                 {
                     if (ans_pIdList[i] == 0)
                         break;
-
+                    //System.out.println(ans_pIdList[i] +" "+ pIdList[i]);
                     if (ans_pIdList[i] != pIdList[i])
                     {
                         ret = false;
@@ -184,7 +228,7 @@ class Solution_SocialMedia {
 
 
     public static void main(String[] args) throws Exception {
-//		System.setIn(new java.io.FileInputStream("eval_input.txt"));
+		System.setIn(new java.io.FileInputStream("res/sample_sample_input.txt"));
         br = new BufferedReader(new InputStreamReader(System.in));
 
         int tc;

@@ -8,153 +8,123 @@ class Pro_Solution_신소재케이블2
     private static final int CMD_TEST				= 400;
 
     private static UserSolution usersolution = new UserSolution();
-    static class UserSolution
-    {
-        class Node implements Comparable<Node>{
+    static class UserSolution {
+        class Node implements Comparable<Node> {
             int dest;
             int distance;
 
-            Node (int dest, int distance){
+            Node(int dest, int distance) {
                 this.dest = dest;
                 this.distance = distance;
             }
+
             @Override
-            public int compareTo(Node o){
-                return Integer.compare(o.distance,this.distance);
+            public int compareTo(Node o) {
+                return Integer.compare(o.distance, this.distance);
             }
 
         }
-        HashMap <Integer, Integer> info;
+
+        HashMap<Integer, Integer> info;
         int cnt;
-        ArrayList<ArrayList <Node>> road;
-        public void init(int mDevice)
-        {
+        ArrayList<ArrayList<Node>> road;
+        int [] trace;
+        boolean [] visited;
+        PriorityQueue < Node> dis;
+
+        public void init(int mDevice) {
+            cnt=0;
             info = new HashMap<>();
-            info.put(mDevice,cnt);
+            info.put(mDevice, cnt);
             road = new ArrayList<>();
             road.add(new ArrayList<>());
-            cnt ++;
+            cnt++;
             return;
         }
 
 
-        public void connect(int mOldDevice, int mNewDevice, int mLatency)
-        {
+        public void connect(int mOldDevice, int mNewDevice, int mLatency) {
             int oldD = info.get(mOldDevice);
             int newD = cnt;
-            info.put(mNewDevice,cnt);
-            cnt ++;
-            ArrayList <Node> newR = new ArrayList<>();
-            newR.add(new Node(oldD,mLatency));
+            info.put(mNewDevice, newD);
+            cnt++;
+            ArrayList<Node> newR = new ArrayList<>();
+            newR.add(new Node(oldD, mLatency));
             road.add(newR);
-            road.get(oldD).add(new Node(newD,mLatency));
+            road.get(oldD).add(new Node(newD, mLatency));
 
             return;
         }
 
-        public int measure(int mDevice1, int mDevice2)
-        {
-            boolean [] visited = new boolean[cnt];
-            int result =-1;
+        public int measure(int mDevice1, int mDevice2) {
+            boolean[] visited = new boolean[cnt];
+            int result = -1;
             int start = info.get(mDevice1);
             int end = info.get(mDevice2);
             visited[start] = true;
-            Deque <Integer [] > dq = new ArrayDeque<>();
-            dq.add(new Integer[] {start ,0});
-            outer : while(!dq.isEmpty()){
-                Integer [] cur = dq.poll();
-                int point = cur[0]; int dis = cur[1];
-                for(Node nxt : road.get(point)){
-                    if(visited[nxt.dest]) continue;
-                    if(nxt.dest == end){
+            Deque<Integer[]> dq = new ArrayDeque<>();
+            dq.add(new Integer[]{start, 0});
+            outer:
+            while (!dq.isEmpty()) {
+                Integer[] cur = dq.poll();
+                int point = cur[0];
+                int dis = cur[1];
+                for (Node nxt : road.get(point)) {
+                    if (visited[nxt.dest]) continue;
+                    if (nxt.dest == end) {
                         result = dis + nxt.distance;
                         break outer;
                     }
                     visited[nxt.dest] = true;
-                    dq.add(new Integer[] { nxt.dest, dis+ nxt.distance});
+                    dq.add(new Integer[]{nxt.dest, dis + nxt.distance});
                 }
             }
-           // System.out.println("result"+result);
+
             return result;
         }
 
-        public int test(int mDevice)
-        {
-            int [] dist = new int [cnt];
-            boolean [] visited = new boolean [cnt];
-            ArrayList [] root = new ArrayList[cnt];
-            for(int i=0; i<cnt;i++){
-                root[i] = new ArrayList<Integer>();
-            }
-            Arrays.fill(dist,Integer.MAX_VALUE);
-            PriorityQueue <Node> pq = new PriorityQueue<>();
-            int start = info.get(mDevice);
-            root[start] = new ArrayList<Integer>();
-            pq.add(new Node(start,0));
-            dist [start] = 0;
-            while(!pq.isEmpty()){
-                Node cur = pq.poll();
+        public int test(int mDevice) {
+            trace = new int [cnt];
+            visited = new boolean[cnt];
+            dis = new PriorityQueue<Node>();
+            bfs(mDevice);
+            Node far =dis.poll();
+            int result = far.distance;
+            int start =far.dest;
 
-                if(visited[cur.dest]) continue;
-
-                visited[cur.dest]= true;
-
-                for(Node nxt : road.get(cur.dest)){
-                    if(dist[nxt.dest] > dist[cur.dest] + nxt.distance){
-                        dist[nxt.dest] = dist[cur.dest] + nxt.distance;
-                        ArrayList <Integer> cpy = (ArrayList<Integer>) root[cur.dest];
-                        cpy.add(nxt.dest);
-                        root[nxt.dest] = cpy;
-                        pq.add(new Node(nxt.dest,dist[nxt.dest]));
-                    }
+            visited = new boolean[cnt];
+            while(true){
+                if(start ==info.get(mDevice)){
+                    break;
                 }
+                visited[start] =true;
+                start = trace[start];
             }
-            int idx =-1;
-            int max = Integer.MIN_VALUE;
-            for(int i=0; i<cnt;i++){
-                if(max < dist[i] && dist[i] != Integer.MAX_VALUE){
-                    max = dist[i];
-                    idx=i;
-                }
-            }
-            System.out.println("first"+ max);
-            boolean []  checked = new boolean[cnt];
-            for(int i=0;i<root[idx].size();i++){
-                System.out.println((int) root[idx].get(i));
-                checked[(int) root[idx].get(i)]= true;
-            }
-            max += another(mDevice,checked);
-            System.out.println(max);
-            return max;
+            dis.clear();
+            bfs(mDevice);
+            result += dis.isEmpty() ? 0 : dis.poll().distance;
+            return result;
+
         }
-        public int another(int mDevice, boolean [] checked){
-            int [] dist = new int [cnt];
-            Arrays.fill(dist,Integer.MAX_VALUE);
-            PriorityQueue <Node> pq = new PriorityQueue<>();
+
+        void bfs(int mDevice){
             int start = info.get(mDevice);
-            dist [start] = 0;
-            pq.add(new Node(start,0));
-            while(!pq.isEmpty()){
-                Node cur = pq.poll();
-
-                if(checked[cur.dest]) continue;
-
-                checked[cur.dest]= true;
-
-                for(Node nxt : road.get(cur.dest)){
-                    if(dist[nxt.dest] > dist[cur.dest] + nxt.distance){
-                        dist[nxt.dest] = dist[cur.dest] + nxt.distance;
-                        pq.add(new Node(nxt.dest,dist[nxt.dest]));
-                    }
+            visited[start] = true;
+            Deque<Integer[]> dq = new ArrayDeque<>();
+            dq.add(new Integer[]{start, 0});
+            while (!dq.isEmpty()) {
+                Integer[] cur = dq.poll();
+                int point = cur[0];
+                int dist = cur[1];
+                for (Node nxt : road.get(point)) {
+                    if (visited[nxt.dest]) continue;
+                    visited[nxt.dest] = true;
+                    trace[nxt.dest] =point;
+                    dis.add(new Node(nxt.dest,dist + nxt.distance));
+                    dq.add(new Integer[]{nxt.dest, dist + nxt.distance});
                 }
             }
-            int max = Integer.MIN_VALUE;
-            for(int i=0; i<cnt;i++){
-                if(max < dist[i] && dist[i] != Integer.MAX_VALUE){
-                    max = dist[i];
-                }
-            }
-            return max;
+
         }
     }
 
