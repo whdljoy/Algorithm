@@ -1,5 +1,9 @@
 import java.util.Scanner;
 import java.util.*;
+
+/**
+ * 세그먼트 트리로 구현해보기
+ */
 class Pro_Solution_국가행정
 {
     private static final int CMD_INIT				= 100;
@@ -35,9 +39,19 @@ class Pro_Solution_국가행정
 
         int [] seg;
         int [] line;
-                void make_seg(int node){
+        PriorityQueue<Node> pq;
+        void make_seg(int node,int start, int end){
 
-                }
+            if(start == end){
+                seg[node] =info[start];
+                return;
+            }
+            int mid = (start+end)/2;
+            make_seg(node*2,start,mid);
+            make_seg(node*2+1,mid+1,end);
+            seg[node] = seg[node*2]+ seg[node*2+1];
+
+        }
         /**
          *  N : 도시의 수 ( 5 ≤ N ≤ 10,000 )
          *
@@ -52,6 +66,12 @@ class Pro_Solution_국가행정
             seg = new int [N*4];
             Arrays.fill(line,1);
             this.info = mPopulation;
+            make_seg(1,0,N-1);
+            pq = new PriorityQueue<>();
+            for(int i=0;i<N-1;i++){
+                int dis = (int) Math.floor((info[i+1]+info[i])/line[i]);
+                pq.add(new Node(i,i+1,dis));
+            }
             return;
         }
 
@@ -66,17 +86,11 @@ class Pro_Solution_국가행정
          */
         int expand(int M) //5000회
         {
-            PriorityQueue<Node> pq = new PriorityQueue<>();
-            for(int i=0;i<N-1;i++){
-                int dis = (int) Math.floor((info[i+1]+info[i])/line[i]);
-                pq.add(new Node(i,i+1,dis));
-            }
             int time=0;
             for(int i=0;i<M;i++){
                 Node cur = pq.poll();
                 line[cur.start] +=1;
                 cur.time =(int) Math.floor((info[cur.end]+info[cur.start])/line[cur.start]);
-//                System.out.println(cur.time);
                 pq.add(cur);
                 time = cur.time;
             }

@@ -75,11 +75,12 @@ public class Solution_K번째문자열 {
         answer = current.contains(word);
         HashSet<String> total =new HashSet<>();
         for(int i=0; i< answer.length;i++){
-            String cur = "";
-            for(int j=0;j<answer[i].length();j++){
-                cur += answer[i].charAt(j);
-                total.add(cur);
-            }
+            System.out.println(answer[i]);
+//            String cur = "";
+//            for(int j=0;j<answer[i].length();j++){
+//                cur += answer[i].charAt(j);
+//                total.add(cur);
+//            }
         }
         answer = (String[]) total.toArray(new String[0]);
         Arrays.sort(answer);
