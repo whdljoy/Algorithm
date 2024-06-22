@@ -8,7 +8,7 @@ public class Main_1325_효율적인해킹 {
     static int [] ans;
     static int mv = Integer.MIN_VALUE;
     static boolean [] visited;
-    public static void main(String[] args) throws IOException {
+    public static void main(String[]  args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         input(br);
