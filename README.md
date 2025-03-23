@@ -59,3 +59,19 @@ Solution 으로 시작하는 파일명 사용
 ```
 Main 으로 시작하는 파일명 사용
 ```
+
+
+
+## 📌 컴파일버전
+
+**C/C++** : gcc-10.5, C++14 표준 - SWEA 기준 (https://swexpertacademy.com/main/sst/intro.do)
+
+- MingW를 통한 GCC 설치
+
+- GCC 버전 변경 (아래 블로그 참고)
+
+- https://salsalchanchan.tistory.com/16
+
+  
+
+**Java** : JAVA (OpenJDK 8) - SWEA 기준 (https://swexpertacademy.com/main/sst/intro.do)
